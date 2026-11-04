@@ -1,0 +1,23 @@
+method: bayes
+run_cap: 50
+
+
+metric:
+  name: w1_val_avg
+  goal: minimize
+
+parameters:
+  metric:
+    values: ["mfm"]
+  mfm.K:
+    values: [100, 150, 200]
+  mfm.kappa:
+    values: [1.0, 1.5]
+  mfm.epsilon:
+    values: [1e-2, 5e-2, 1e-1, 2e-1]
+  use_euclidean_ot:
+    values: [true, false]
+  seeded:
+    values: [false]
+  # seed:
+  #   values: [1, 2, 3, 4, 5]

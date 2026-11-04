@@ -1,0 +1,11 @@
+# @package _global_
+project: "zebrafish_arch"
+dataset: "zebrafish_arch"
+data: "zebrafish"
+pc_dim: 100
+tissue: "Pharyngeal Arch"
+t0_index: 1
+t1_index: 4
+sample_key: "embryo"
+use_paga: true
+paga_threshold: 0.2

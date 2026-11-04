@@ -1,0 +1,9 @@
+# @package _global_
+project: "zebrafish_cns"
+dataset: "zebrafish_cns"
+data: "zebrafish"
+pc_dim: 100
+tissue: "Central Nervous System"
+t0_index: 1
+t1_index: 4
+sample_key: "embryo"

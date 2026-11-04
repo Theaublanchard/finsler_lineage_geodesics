@@ -1,0 +1,11 @@
+# @package _global_
+project: "mouse_blood"
+dataset: "mouse_blood"
+data: "mouse"
+pc_dim: 100
+tissue: "blood"
+t0_index: 1
+t1_index: 7
+sample_key: "sample"
+use_paga: True
+paga_threshold: 0.0

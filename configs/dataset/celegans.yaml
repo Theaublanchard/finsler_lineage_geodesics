@@ -1,0 +1,6 @@
+# @package _global_
+project: "celegans"
+dataset: "celegans"
+pc_dim: 100
+t0_index: 0
+t1_index: 2

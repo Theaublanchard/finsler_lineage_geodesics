@@ -1,0 +1,22 @@
+method: grid
+
+metric:
+  name: w1_avg
+  goal: minimize
+
+#zebrafish-cns last: 150, 1.5, 0.05, True
+#zebrafish-arch last: 150, 1.5, 0.2, True
+
+parameters:
+  metric:
+    values: ["mfm"]
+  mfm.K:
+    values: [150, 200]
+  mfm.kappa:
+    values: [1, 1.5]
+  mfm.epsilon:
+    values: [0.1, 0.2]
+  use_euclidean_ot:
+    values: [false]
+  seed:
+    values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

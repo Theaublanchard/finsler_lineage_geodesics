@@ -1,0 +1,26 @@
+method: grid
+
+metric:
+  name: w1_avg
+  goal: minimize
+
+parameters:
+  metric:
+    values: ["cfm"]
+  finsler.use:
+    values: [true]
+  finsler.lamb:
+    values: [0.5]
+  classifier.hidden_dim:
+    values: [128]
+  classifier.num_layers:
+    values: [2]
+  classifier.epsilon:
+    values: [0.03, 0.05]
+  use_euclidean_ot:
+    values: [true]
+  force_icfm:
+    values: [true]
+  seed:
+    values: [1, 2, 3, 4, 5]
+  

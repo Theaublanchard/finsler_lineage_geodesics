@@ -1,0 +1,10 @@
+wandb/
+.ipynb_checkpoints
+conditional-flow-matching/
+data/
+__pycache__
+.run
+lightning_logs
+checkpoints_minimal
+plots_minimal
+CLAUDE.md
