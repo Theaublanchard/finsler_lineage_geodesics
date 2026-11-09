@@ -34,26 +34,20 @@ from pathlib import Path
 import numpy as np
 import torch
 
+from fingeo_supplement.paths import FINGEO_OUT_ROOT
+
 
 def _delete_per_tissue_cache(tissue: str) -> None:
     """Remove the per-tissue processed cache for ``tissue`` (if present).
 
-    The cache lives at ``data/processed/<slug>.h5ad`` (see
-    :func:`datasets.process.processed_cache_path`). Deleting it forces the
-    next :func:`datasets.process.process_data` call to rebuild from the raw
+    The cache lives at ``<FINGEO_DATA_DIR>/processed/<slug>.h5ad`` (see
+    :func:`fingeo_supplement.paths.processed_cache_path`). Deleting it forces
+    the next :func:`datasets.process.process_data` call to rebuild from the raw
     shared cache.
     """
-    try:
-        from fingeo_supplement.datasets.process import processed_cache_path
-    except ImportError:
-        # Fallback slug computation matching datasets.process.
-        slug = tissue.lower()
-        slug = "".join(ch if ch.isalnum() else "_" for ch in slug).strip("_")
-        while "__" in slug:
-            slug = slug.replace("__", "_")
-        p = Path("data") / "processed" / f"{slug}.h5ad"
-    else:
-        p = Path(processed_cache_path(tissue))
+    from fingeo_supplement.paths import processed_cache_path
+
+    p = processed_cache_path(tissue)
     if p.exists():
         p.unlink()
         print(f"[{tissue}] deleted per-tissue cache {p}")
@@ -105,7 +99,7 @@ def _resolve_tissue(tissue: str) -> str:
 
 def run_tissue(
     tissue: str,
-    out_root: str = "outputs",
+    out_root: str | None = None,
     do_training: bool = True,
     use_wandb: bool = False,
     device: str = "auto",
@@ -126,6 +120,8 @@ def run_tissue(
         raw shared cache. Use after changing ``pc_dim``, the lineage tree,
         or any preprocessing parameter.
     """
+    if out_root is None:
+        out_root = FINGEO_OUT_ROOT
     spec = TISSUES[_resolve_tissue(tissue)]
     if force:
         _delete_per_tissue_cache(spec["tissue"])
@@ -229,7 +225,9 @@ def run_tissue(
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--tissue", default="both", choices=["cns", "pa", "both"])
-    ap.add_argument("--out", default="outputs", help="output root (default: outputs)")
+    ap.add_argument(
+        "--out", default=str(FINGEO_OUT_ROOT), help="output root (default: <repo>/outputs)"
+    )
     ap.add_argument(
         "--skip-training",
         action="store_true",

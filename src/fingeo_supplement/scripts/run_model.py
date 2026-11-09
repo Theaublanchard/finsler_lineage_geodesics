@@ -28,6 +28,7 @@ from fingeo_supplement.models.metric_models import *
 from fingeo_supplement.models.embed_models import *
 from fingeo_supplement.utils.preprocess import *
 from fingeo_supplement.datasets.dataset import *
+from fingeo_supplement.paths import FINGEO_OUT_ROOT
 from fingeo_supplement.utils.frozen import *
 from fingeo_supplement.utils.callback import *
 from fingeo_supplement.models.modules import *
@@ -501,7 +502,7 @@ def tissue_slug(config) -> str:
     return slug or "tissue"
 
 
-def save_finsler_artifacts(config, adata, classifier_model, embed_model, out_root="outputs"):
+def save_finsler_artifacts(config, adata, classifier_model, embed_model, out_root=None):
     """Persist everything needed to reconstruct the trained Finsler metric.
 
     Writes a single ``outputs/<tissue>/finsler_metric.pt`` bundle containing the
@@ -529,7 +530,7 @@ def save_finsler_artifacts(config, adata, classifier_model, embed_model, out_roo
     Path
         The path the artifact bundle was written to.
     """
-    out_dir = Path(out_root) / tissue_slug(config)
+    out_dir = Path(out_root if out_root is not None else FINGEO_OUT_ROOT) / tissue_slug(config)
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "finsler_metric.pt"
 

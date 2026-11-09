@@ -29,6 +29,8 @@ try:
 except Exception:  # pragma: no cover - omegaconf is a hard project dep
     OmegaConf = None
 
+from fingeo_supplement.paths import reports_root
+
 
 def method_label(metric: str | None, finsler_use: bool | None) -> str:
     """Human-readable method name from the config's ``metric`` + ``finsler.use``.
@@ -97,7 +99,7 @@ def write_run_report(
     run_name: str | None = None,
     run_id: str | None = None,
     extra: dict | None = None,
-    out_root: str | Path = "outputs/reports",
+    out_root: str | Path | None = None,
 ) -> Path:
     """Write a single per-run ``report.json`` and return its path.
 
@@ -156,7 +158,7 @@ def write_run_report(
 
     slug = run_name or run_slug(dataset, report["method"], seed, eps)
     slug = _safe(slug)
-    out_dir = Path(out_root) / slug
+    out_dir = (Path(out_root) if out_root is not None else reports_root()) / slug
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "report.json"
 

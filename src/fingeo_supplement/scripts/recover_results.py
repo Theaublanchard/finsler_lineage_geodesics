@@ -30,7 +30,9 @@ import statistics
 from collections import defaultdict
 from pathlib import Path
 
-REPORT_ROOT = Path("outputs/reports")
+from fingeo_supplement.paths import reports_root
+
+REPORT_ROOT = reports_root()
 GROUP_KEYS = ("dataset", "method", "classifier_epsilon")
 CSV_COLUMNS = [
     "dataset",

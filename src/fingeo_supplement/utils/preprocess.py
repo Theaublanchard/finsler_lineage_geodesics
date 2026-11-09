@@ -11,6 +11,7 @@ import scanpy as sc
 import anndata as ad
 import os
 import pandas as pd
+from fingeo_supplement.paths import FINGEO_DATA_DIR
 
 
 def import_zebrafish_data() -> ad.AnnData:
@@ -26,7 +27,7 @@ def import_zebrafish_data() -> ad.AnnData:
         The raw (unnormalized) dataset.
     """
 
-    path = "data"
+    path = FINGEO_DATA_DIR
     mtx_suffix = "zscape_perturb_full_raw_counts.mtx"
     cell_suffix = "zscape_perturb_full_cell_metadata.csv"
     gene_suffix = "zscape_perturb_full_gene_metadata.csv"

@@ -57,6 +57,7 @@ from fingeo_supplement.datasets.process import (
 )  # noqa: E402
 from fingeo_supplement.datasets.dataset import ShufflingDataset  # noqa: E402
 from fingeo_supplement.utils.hydra import load_config  # noqa: E402
+from fingeo_supplement.paths import FINGEO_OUT_ROOT  # noqa: E402
 
 AVAILABLE_DATASETS = [
     "zebrafish_cns",
@@ -623,11 +624,11 @@ def main() -> int:
 
     slug = _method_slug(args.metric, args.finsler)
     if args.out is not None:
-        out_dir = args.out
+        out_dir = Path(args.out)
     elif args.dataset == "synthetic":
-        out_dir = Path("outputs") / "synthetic" / f"d{args.dim}_{slug}"
+        out_dir = FINGEO_OUT_ROOT / "synthetic" / f"d{args.dim}_{slug}"
     else:
-        out_dir = Path("outputs") / args.dataset / slug
+        out_dir = FINGEO_OUT_ROOT / args.dataset / slug
 
     if args.dataset == "synthetic":
         _run_synthetic(

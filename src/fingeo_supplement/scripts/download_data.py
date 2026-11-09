@@ -258,7 +258,8 @@ def check(data_dir: Path) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    here = Path(__file__).resolve().parent.parent  # fingeo_supplement/
+    from fingeo_supplement.paths import FINGEO_DATA_DIR
+
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -283,7 +284,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = ap.parse_args(argv)
 
-    data_dir = Path(args.data_dir) if args.data_dir else here / "data"
+    data_dir = Path(args.data_dir) if args.data_dir else FINGEO_DATA_DIR
     if not data_dir.is_absolute():
         data_dir = (Path.cwd() / data_dir).resolve()
     data_dir.mkdir(parents=True, exist_ok=True)

@@ -13,31 +13,10 @@ import pandas as pd
 from fingeo_supplement.datasets.dataset import *
 from fingeo_supplement.utils.preprocess import *
 from fingeo_supplement.utils.lineage import *
+from fingeo_supplement.paths import FINGEO_DATA_DIR, processed_cache_path
 import networkx as nx
 import scipy.io as sio
 from pathlib import Path
-
-
-def processed_cache_path(tissue: str) -> str:
-    """Path of the per-tissue *processed* cache.
-
-    ``data/processed/<slug>.h5ad`` where ``<slug>`` is the tissue name
-    lower-cased with non-alphanumeric runs collapsed to ``_``
-    (e.g. ``"Central Nervous System"`` -> ``"central_nervous_system"``).
-
-    Unlike the raw shared cache (``data/zebra_preprocessed.h5ad``), this file
-    contains the final object consumed by training/eval: the tissue subset,
-    ``obs['cell_type']`` / ``obs['cell_type_one_hot']``, ``obsm['X_pca']``, and
-    the lineage tree (``uns['tree'/'stoi'/'itos']``). It can therefore be read
-    directly with ``anndata.read_h5ad`` without re-running
-    :func:`process_data`.
-    """
-    slug = tissue.lower()
-    slug = "".join(ch if ch.isalnum() else "_" for ch in slug).strip("_")
-    while "__" in slug:
-        slug = slug.replace("__", "_")
-    return os.path.join("data", "processed", f"{slug}.h5ad")
-
 
 """Dataset loading, preprocessing, and lineage-tree construction.
 
@@ -86,8 +65,7 @@ def process_data(
     adata : anndata.AnnData
         Preprocessed AnnData with the tree in ``uns['tree']``.
     """
-    # Suppose the repo is cloned to fingeo_supplement/ and we're running from the repo root.
-    path = Path(__file__).parent.parent.parent / "data"
+    path = FINGEO_DATA_DIR
     if data == "zebrafish":
         # ---- per-tissue processed cache (fast path) ----------------------
         # If we already built the final object for this tissue (subset +
