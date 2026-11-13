@@ -5,9 +5,20 @@ overrides, and returns an ``OmegaConf`` object.
 """
 
 import sys
+from pathlib import Path
 from typing import List, Optional
-from hydra import initialize, compose
+from hydra import initialize_config_dir, compose
 from omegaconf import OmegaConf
+
+
+def _config_dir() -> Path:
+    """Find bundled configs, falling back to the source-checkout config tree."""
+    config_dir = Path(__file__).resolve().parents[1] / "configs"
+    if not config_dir.is_dir():
+        config_dir = Path(__file__).resolve().parents[3] / "configs"
+    if not config_dir.is_dir():
+        raise FileNotFoundError(f"Hydra config directory not found: {config_dir}")
+    return config_dir
 
 
 def load_config(
@@ -27,6 +38,8 @@ def load_config(
     omegaconf.DictConfig
         The composed configuration object.
     """
-    with initialize(version_base=None, config_path="../../../configs"):
+    with initialize_config_dir(
+        version_base=None, config_dir=str(_config_dir())
+    ):
         cfg = compose(config_name=config_name, overrides=overrides or [])
     return cfg

@@ -147,6 +147,32 @@ Recovery is **two steps**:
 
 > **The full cell-level graph is large.** It is the all-pairs cost over every cell (`n_cells × n_cells`, e.g. ~65 500² ≈ **4.3 billion entries** for CNS), so the `.npz` / `.nx.pkl` / `.csv` files are **multi-gigabyte**. That is why `recover.py` does not write them by default and instead defers to the `finsler_extract.py` CLI. For most analyses the `finsler_metric.pt` + `load_finsler_metric` (below) is all you need — compute the cost on a *subsampled* set of cells rather than exporting the full matrix. The type-level files (`type_*`, only `|C| × |C|`) are small and cheap.
 
+### Run recovery from another project
+
+The package installs a `fingeo-recover` command. In the consuming project, add this repository as a dependency (use a release tag or commit instead of `main` for reproducible environments):
+
+```bash
+uv add "fingeo-supplement @ git+https://github.com/Theaublanchard/finsler_lineage_geodesics.git@main"
+```
+
+Provide the atlas data directory and choose where the model artifact should be written. The raw zebrafish files described in [DATA_DOWNLOAD.md](DATA_DOWNLOAD.md) must be present in `data/` before running:
+
+```bash
+FINGEO_DATA_DIR="$PWD/data" \
+FINGEO_OUT_ROOT="$PWD/artifacts/fingeo" \
+uv run fingeo-recover --tissue cns
+```
+
+This writes `artifacts/fingeo/cns/finsler_metric.pt` and preprocessing caches under `data/`. The command also accepts the recovery options documented above, for example `--tissue pa`, `--tissue both`, `--skip-training`, and `--force`. In Python, load the recovered artifact using the package helper:
+
+```python
+from fingeo_supplement.utils.finsler_extract import load_finsler_metric
+
+metric = load_finsler_metric("artifacts/fingeo/cns/finsler_metric.pt")
+```
+
+To install a local checkout during development instead, use `uv add --editable /path/to/finsler_lineage_geodesics`.
+
 The three training phases, in plain terms:
 
 1. **Classifier** (`src/fingeo_supplement/models/classifier_models.py`) — learns `f(x)`: the cell-type probability used to define “which lineage direction does moving from `x` in direction `v` agree/disagree with”.
